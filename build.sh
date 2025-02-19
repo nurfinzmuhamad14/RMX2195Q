@@ -28,7 +28,9 @@ echo -e "$(make kernelversion)-release"
 if [[ $1 == "-mr" || $1 == "--mrproper" ]]; then
 if [  -d "./out/" ]; then
 echo -e " "
-        rm -rf  ./out/
+        make mrproper
+        make O=out mrproper
+        rm -rf out/
 fi
 echo -e "Cleared"
 sleep 2
@@ -39,7 +41,8 @@ if [[ $1 == "-up" || $1 == "--update" ]]; then
 if [  -d "./out/" ]; then
 echo -e " "
         sudo apt-get update 
-        sudo apt-get install -y ccache cpio  build-essential bc curl git zip ftp gcc-aarch64-linux-gnu gcc-arm-linux-gnueabi libssl-dev lftp zstd wget libfl-dev python3 libarchive-tools device-tree-compiler zsh 
+        sudo apt-get install -y ccache cpio build-essential bc curl git zip ftp gcc-aarch64-linux-gnu gcc-arm-linux-gnueabi libssl-dev lftp zstd wget libfl-dev python3 libarchive-tools device-tree-compiler zsh 
+
 fi
 echo -e "dependencies installed"
 sleep 2
@@ -55,7 +58,8 @@ echo -e "Clone clang"
 sleep 2
 fi
 
-
+ccache -M 50
+ccache -F 5000
 echo -e "$blue    \nMake DefConfig\n $nocol"
 mkdir -p out
 make O=out ARCH=arm64 $DEFCONFIG
